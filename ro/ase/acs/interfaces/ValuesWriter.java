@@ -4,5 +4,5 @@ import java.util.List;
 import java.util.Map;
 
 public interface ValuesWriter {
-    void displaySetResult(List<Map<String, Object>> inregistrari);
+    void displaySetResult(List<Map<String, Object>> rows);
 }
