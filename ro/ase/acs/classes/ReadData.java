@@ -1,29 +1,34 @@
 package ro.ase.acs.classes;
 
-import ro.ase.acs.interfaces.DataBaseHandler;
+import ro.ase.acs.enums.TableSQL;
+import ro.ase.acs.interfaces.DatabaseSelectHandler;
 
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.*;
 
-public class ReadData implements DataBaseHandler {
+public class ReadData implements DatabaseSelectHandler {
     @Override
-    public void handleData(Connection connection) throws SQLException {
-        String sqlSelect = "SELECT * FROM employees";
+    public List<Map<String, Object>> handleData(Connection connection) throws SQLException {
         Statement statement = connection.createStatement();
-        ResultSet rs = statement.executeQuery(sqlSelect);
+        ResultSet rs = statement.executeQuery(TableSQL.SELECT_ALL.getCommand());
+        List<Map<String, Object>> list = new ArrayList<>();
         while (rs.next()) {
-            int id = rs.getInt("id");
-            System.out.println("id: " + id);
+            Map<String, Object> map = new LinkedHashMap<>();
+            int id = rs.getInt(1);
+            map.put("id", id);
             String name = rs.getString(2);
-            System.out.println("name: " + name);
-            String address = rs.getString("address");
-            System.out.println("address: " + address);
-            double salary = rs.getDouble("salary");
-            System.out.println("salary: " + salary);
+            map.put("name", name);
+            String address = rs.getString(3);
+            map.put("address", address);
+            double salary = rs.getDouble(4);
+            map.put("salary", salary);
+            list.add(map);
         }
         rs.close();
         statement.close();
+        return list;
     }
 }
